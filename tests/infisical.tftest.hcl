@@ -10,7 +10,7 @@ mock_provider "infisical" {
 
 mock_provider "random" {
   override_resource {
-    target          = random_string.suffix
+    target = random_string.suffix
 
     values = {
       result = "a7c"
