@@ -1,21 +1,45 @@
 locals {
-  label = "${var.stage}-${var.service}-${random_string.s.result}"
-  tags  = ["stage:${var.stage}", "service:${var.service}", "component:backups"]
+  suffix = random_string.suffix.result
+  name   = "${var.stage}-${var.service}-${local.suffix}"
 }
 
-resource "random_string" "s" {
-  length  = 4
-  special = false
+resource "random_string" "suffix" {
+  length  = 3
   upper   = false
+  lower   = true
+  numeric = true
+  special = false
 }
 
-resource "linode_object_storage_bucket" "b" {
-  region = var.region
-  label  = local.label
+resource "infisical_identity" "i" {
+  name   = local.name
+  role   = var.org_role
+  org_id = var.org_id
 
-  access_key = var.versioning.enabled ? var.versioning.access_key_id : null
-  secret_key = var.versioning.enabled ? var.versioning.secret_access_key : null
+  metadata = [
+    {
+      key   = "service",
+      value = var.service
+    },
+    {
+      key   = "stage",
+      value = var.stage
+    },
+    {
+      key   = "managed-by",
+      value = "terraform"
+    }
+  ]
+}
 
-  versioning = var.versioning.enabled
-  acl        = "private"
+resource "infisical_identity_universal_auth" "a" {
+  identity_id                 = infisical_identity.i.id
+  access_token_ttl            = var.access_token_ttl # 30 days
+  access_token_max_ttl        = var.access_token_ttl * 2
+  access_token_num_uses_limit = 3
+}
+
+resource "infisical_identity_universal_auth_client_secret" "s" {
+  identity_id = infisical_identity.i.id
+  depends_on  = [infisical_identity_universal_auth.a]
 }

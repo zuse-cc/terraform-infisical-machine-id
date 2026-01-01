@@ -23,6 +23,10 @@ test:
 	terraform init -upgrade
 	terraform test
 
+.PHONY: fmt
+fmt:
+	find . -type f -name '*.tf' -or -name '*.tfvars' -or -name '*.tftest.hcl' | xargs -n1 terraform fmt
+
 .PHONY: check-fmt
 check-fmt:
 	find . -type f -name '*.tf' -or -name '*.tfvars' -or -name '*.tftest.hcl' | xargs -n1 terraform fmt -check -diff
