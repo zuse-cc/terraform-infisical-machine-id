@@ -17,17 +17,18 @@ variable "org_role" {
   default = "member"
 }
 
-variable "project_slug" {
-  type = string
-}
-
-variable "role_slug" {
-  type    = string
-  default = "viewer"
-}
-
 variable "access_token_ttl" {
   description = "Access token time to live in seconds. Default is 30 days."
   type        = number
   default     = 2592000
+}
+
+variable "projects" {
+  description = "Projects to assign the machine id to"
+  default     = []
+
+  type = set(object({
+    id   = string
+    role = optional(string, "viewer")
+  }))
 }
