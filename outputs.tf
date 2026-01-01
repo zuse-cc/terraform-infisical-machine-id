@@ -1,7 +1,16 @@
-output "bucket" {
-  value = linode_object_storage_bucket.b.label
+output "identity_name" {
+  value = infisical_identity.i.name
 }
 
-output "endpoint" {
-  value = linode_object_storage_bucket.b.s3_endpoint
+output "identity_id" {
+  value = infisical_identity.i.id
+}
+
+output "client_id" {
+  value = infisical_identity_universal_auth_client_secret.s.client_id
+}
+
+output "client_secret" {
+  sensitive = true
+  value     = infisical_identity_universal_auth_client_secret.s.client_secret
 }

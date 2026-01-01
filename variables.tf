@@ -1,8 +1,3 @@
-variable "region" {
-  description = "Linode region to create the bucket in"
-  type        = string
-}
-
 variable "stage" {
   description = "Deployment stage"
   type        = string
@@ -13,14 +8,26 @@ variable "service" {
   type        = string
 }
 
-variable "versioning" {
-  description = "Enable versioning for the bucket"
-  type = object({
-    enabled           = bool
-    access_key_id     = optional(string)
-    secret_access_key = optional(string)
-  })
-  default = {
-    enabled = false
-  }
+variable "org_id" {
+  type = string
+}
+
+variable "org_role" {
+  type    = string
+  default = "member"
+}
+
+variable "project_slug" {
+  type = string
+}
+
+variable "role_slug" {
+  type    = string
+  default = "viewer"
+}
+
+variable "access_token_ttl" {
+  description = "Access token time to live in seconds. Default is 30 days."
+  type        = number
+  default     = 2592000
 }
