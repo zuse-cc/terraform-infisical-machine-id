@@ -21,7 +21,6 @@ mock_provider "random" {
 variables {
   stage        = "tst"
   service      = "bucket"
-  region       = "eu-central"
   org_id       = "99d438ec-e6de-11f0-9c94-f2bb0a58e59e"
   project_slug = "t3st-pr0ject"
 }
@@ -90,5 +89,41 @@ run "client_secret_is_created" {
   assert {
     condition     = output.client_secret == "mock-client-secret-abc"
     error_message = "client_secret does not match mocked value"
+  }
+}
+
+run "no_project_identities_created_when_no_projects_given" {
+  assert {
+    condition     = length(infisical_project_identity.p) == 0
+    error_message = "expected no project identities to be created when no projects are given"
+  }
+}
+
+run "project_identities_created_when_projects_given" {
+  variables {
+    projects = [
+      {
+        id   = "project-1-id"
+        role = "editor"
+      },
+      {
+        id   = "project-2-id"
+      }
+    ]
+  }
+
+  assert {
+    condition     = length(infisical_project_identity.p) == 2
+    error_message = "expected 2 project identities to be created"
+  }
+
+  assert {
+    condition     = infisical_project_identity.p["project-1-id"].roles[0].role_slug == "editor"
+    error_message = "role for project-1-id is incorrect"
+  }
+
+  assert {
+    condition     = infisical_project_identity.p["project-2-id"].roles[0].role_slug == "viewer"
+    error_message = "default role for project-2-id should be 'viewer'"
   }
 }
