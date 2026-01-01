@@ -107,7 +107,7 @@ run "project_identities_created_when_projects_given" {
         role = "editor"
       },
       {
-        id   = "project-2-id"
+        id = "project-2-id"
       }
     ]
   }
