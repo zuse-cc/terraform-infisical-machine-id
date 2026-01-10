@@ -27,7 +27,7 @@ variable "projects" {
   description = "Projects to assign the machine id to"
   default     = []
 
-  type = set(object({
+  type = list(object({
     id   = string
     role = optional(string, "viewer")
   }))
