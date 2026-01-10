@@ -1,7 +1,6 @@
 locals {
-  suffix      = random_string.suffix.result
-  name        = "${var.stage}-${var.service}-${local.suffix}"
-  project_map = { for p in var.projects : p.id => p }
+  suffix = random_string.suffix.result
+  name   = "${var.stage}-${var.service}-${local.suffix}"
 }
 
 resource "random_string" "suffix" {
@@ -46,12 +45,12 @@ resource "infisical_identity_universal_auth_client_secret" "s" {
 }
 
 resource "infisical_project_identity" "p" {
-  for_each    = local.project_map
-  project_id  = each.value.id
+  count       = length(var.projects)
+  project_id  = var.projects[count.index].id
   identity_id = infisical_identity.i.id
   roles = [
     {
-      role_slug = each.value.role
+      role_slug = var.projects[count.index].role
     }
   ]
 }
