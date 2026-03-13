@@ -32,3 +32,8 @@ variable "projects" {
     role = optional(string, "viewer")
   }))
 }
+
+variable "token_num_uses_limit" {
+  description = "Number of API calls the access token can be used for (leave empty for no limit)"
+  default     = null
+}
