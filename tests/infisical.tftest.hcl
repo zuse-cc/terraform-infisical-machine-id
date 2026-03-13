@@ -73,6 +73,12 @@ run "universal_auth_is_created" {
     condition     = infisical_identity_universal_auth.a.access_token_max_ttl == 2 * 10 * 24 * 3600
     error_message = "access_token_max_ttl should be 2x access_token_ttl"
   }
+}
+
+run "token_api_usage_limit_is_set" {
+  variables {
+    token_num_uses_limit = 3
+  }
 
   assert {
     condition     = infisical_identity_universal_auth.a.access_token_num_uses_limit == 3
@@ -118,12 +124,12 @@ run "project_identities_created_when_projects_given" {
   }
 
   assert {
-    condition     = infisical_project_identity.p["project-1-id"].roles[0].role_slug == "editor"
+    condition     = infisical_project_identity.p[0].roles[0].role_slug == "editor"
     error_message = "role for project-1-id is incorrect"
   }
 
   assert {
-    condition     = infisical_project_identity.p["project-2-id"].roles[0].role_slug == "viewer"
+    condition     = infisical_project_identity.p[1].roles[0].role_slug == "viewer"
     error_message = "default role for project-2-id should be 'viewer'"
   }
 }
