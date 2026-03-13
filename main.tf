@@ -36,7 +36,7 @@ resource "infisical_identity_universal_auth" "a" {
   identity_id                 = infisical_identity.i.id
   access_token_ttl            = var.access_token_ttl # 30 days
   access_token_max_ttl        = var.access_token_ttl * 2
-  access_token_num_uses_limit = 3
+  access_token_num_uses_limit = var.token_num_uses_limit
 }
 
 resource "infisical_identity_universal_auth_client_secret" "s" {
